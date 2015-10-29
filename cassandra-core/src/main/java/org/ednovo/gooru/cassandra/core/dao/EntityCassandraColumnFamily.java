@@ -11,6 +11,7 @@ import org.ednovo.gooru.core.cassandra.model.ReverseIndexColumnSetting;
 import com.netflix.astyanax.Keyspace;
 import com.netflix.astyanax.entitystore.EntityManager;
 import com.netflix.astyanax.model.ConsistencyLevel;
+import com.netflix.astyanax.retry.ConstantBackoff;
 
 /**
  * @author SearchTeam
@@ -38,7 +39,7 @@ public class EntityCassandraColumnFamily<M> extends CassandraColumnFamily {
 		setColumnFamilyName(initColumnFamilyName(clazz));
 		super.init(keyspace);
 		if (keyspace != null) {
-			entityManager = new GooruDefaultEntityManager.Builder<M, String>().withEntityType(clazz).withKeyspace(keyspace).withConsistency(ConsistencyLevel.CL_QUORUM).build();
+			entityManager = new GooruDefaultEntityManager.Builder<M, String>().withEntityType(clazz).withKeyspace(keyspace).withConsistency(ConsistencyLevel.CL_QUORUM).withRetryPolicy(new ConstantBackoff(2000, 5)).build();
 		} else {
 			getLog().error("Cassandra Mapper for " + getColumnFamilyName() + " : FAILED");
 		}
