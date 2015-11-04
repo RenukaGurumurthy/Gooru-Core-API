@@ -2,10 +2,9 @@ package org.ednovo.gooru.domain.cassandra.service;
 
 import org.ednovo.gooru.core.api.model.Collection;
 import org.ednovo.gooru.core.cassandra.model.ResourceCio;
-import org.ednovo.gooru.core.cassandra.model.SCollectionCo;
 import org.ednovo.gooru.core.constant.ColumnFamilyConstant;
 import org.ednovo.gooru.core.constant.ConstantProperties;
-import org.ednovo.gooru.infrastructure.persistence.hibernate.CollectionRepository;
+import org.ednovo.gooru.infrastructure.persistence.hibernate.CollectionDaoHibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class ScollectionCassandraServiceImpl extends ApiCrudEntityCassandraServiceImpl<Collection, ResourceCio> implements ScollectionCassandraService , ConstantProperties {
 
         @Autowired
-        private CollectionRepository collectionRepository;
+        private CollectionDaoHibernate collectionRepository;
 
 
         @Override
@@ -23,11 +22,11 @@ public class ScollectionCassandraServiceImpl extends ApiCrudEntityCassandraServi
 
         @Override
         protected Collection fetchSource(String gooruOid) {
-                return this.getCollectionRepository().getCollectionByGooruOid(gooruOid,null,true);
+                return this.getCollectionRepository().getCollectionByType(gooruOid, COLLECTION_TYPES);
         }
 
 
-        public CollectionRepository getCollectionRepository() {
+        public CollectionDaoHibernate getCollectionRepository() {
                 return collectionRepository;
         }
 
